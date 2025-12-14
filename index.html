@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>لعبة التفاحة - MEGAPARI</title>
+  <style>
+    body {
+      background: #000;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      color: white;
+    }
+    .container {
+      width: 95%;
+      max-width: 500px;
+      background: #111;
+      border: 3px solid #ffcc00;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+      position: relative;
+    }
+    .logo {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffcc00;
+      color: #000;
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .login-box {
+      background: #000;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border: 2px solid #ffcc00;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 2px solid #00ccff;
+      border-radius: 8px;
+      background: #000;
+      color: white;
+      font-size: 16px;
+    }
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      background: #ffcc00;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .login-box button:hover {
+      background: #ffd740;
+    }
+    .error {
+      color: #ff4444;
+      font-size: 14px;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .grid-wrapper {
+      background: #000;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      padding: 10px;
+      position: relative;
+    }
+    .multipliers {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      bottom: 10px;
+      width: 70px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .multiplier {
+      background: #000;
+      color: white;
+      border: 1px solid #fff;
+      padding: 4px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .mult-1 { color: #ff3333; }
+    .mult-2 { color: #ff6633; }
+    .mult-3 { color: #ff9900; }
+    .mult-4 { color: #ffcc00; }
+    .mult-5 { color: #ffff00; }
+    .mult-6 { color: #00ff00; }
+    .mult-7 { color: #00ffaa; }
+    .mult-8 { color: #00ffcc; }
+    .mult-9 { color: #00ffff; }
+    .mult-10 { color: #00ccff; }
+
+    .apple-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-left: 85px;
+      margin-right: 10px;
+    }
+    .apple-cell {
+      aspect-ratio: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .green-apple {
+      background: linear-gradient(135deg, #00cc00, #00ff00) !important;
+      color: #fff;
+      border-color: #00ff00;
+    }
+    .bitten-apple {
+      background: linear-gradient(135deg, #ff3333, #ff6666) !important;
+      color: #fff;
+      border-color: #ff0000;
+    }
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+    .buttons button {
+      padding: 10px 20px;
+      background: #222;
+      color: #fff;
+      border: 2px solid #ffcc00;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .buttons button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .buttons button:hover:not(:disabled) {
+      background: #ffcc00;
+      color: #000;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #ffcc00;
+    }
+    .contact-btn {
+      display: block;
+      margin: 15px auto 0;
+      width: fit-content;
+      padding: 8px 16px;
+      background: #ff3366;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .contact-btn:hover {
+      background: #ff6699;
+    }
+    #gameSection {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="logo">MEGAPARI</div>
+
+    <div class="login-box">
+      <h3 style="margin:0 0 10px; color:#ffcc00; text-align:center;">أدخل بياناتك للبدء</h3>
+      <input type="text" id="userId" placeholder="أدخل ID الخاص بك" maxlength="20" />
+      <input type="text" id="promoCode" placeholder="أدخل كود البرومو (SAD19)" />
+      <div class="error" id="errorMsg"></div>
+      <button id="loginBtn">تأكيد وابدأ اللعبة</button>
+    </div>
+
+    <div id="gameSection">
+      <h2 style="text-align:center; margin:0 0 15px; color:#ffcc00;">لعبة التفاحة الحظوظ!</h2>
+
+      <div class="grid-wrapper">
+        <div class="multipliers">
+          <div class="multiplier mult-1">x349.68</div>
+          <div class="multiplier mult-2">x69.93</div>
+          <div class="multiplier mult-3">x27.92</div>
+          <div class="multiplier mult-4">x11.18</div>
+          <div class="multiplier mult-5">x6.71</div>
+          <div class="multiplier mult-6">x4.02</div>
+          <div class="multiplier mult-7">x2.41</div>
+          <div class="multiplier mult-8">x1.93</div>
+          <div class="multiplier mult-9">x1.54</div>
+          <div class="multiplier mult-10">x1.23</div>
+        </div>
+
+        <div class="apple-grid" id="appleGrid"></div>
+      </div>
+
+      <div class="buttons">
+        <button id="showBtn" disabled>إظهار الكل</button>
+        <button id="newBtn" disabled>لعبة جديدة</button>
+      </div>
+
+      <div class="footer">
+        كود البرومو: <strong>SAD19</strong>
+      </div>
+
+      <a href="https://t.me/elmrab" target="_blank" class="contact-btn">💬 تواصل على التليجرام</a>
+    </div>
+  </div>
+
+  <script>
+    const bittenPerRow = [4,3,3,2,2,2,1,1,1,1];
+    const userIdInput = document.getElementById('userId');
+    const promoCodeInput = document.getElementById('promoCode');
+    const loginBtn = document.getElementById('loginBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const gameSection = document.getElementById('gameSection');
+    const showBtn = document.getElementById('showBtn');
+    const newBtn = document.getElementById('newBtn');
+    const appleGrid = document.getElementById('appleGrid');
+
+    loginBtn.addEventListener('click', () => {
+      const userId = userIdInput.value.trim();
+      const promo = promoCodeInput.value.trim();
+
+      if (!userId) {
+        errorMsg.textContent = 'الرجاء إدخال ID الخاص بك.';
+        return;
+      }
+      if (promo.toUpperCase() !== 'SAD19') {
+        errorMsg.textContent = 'رمز البرومو غير صحيح! يجب أن يكون: SAD19';
+        return;
+      }
+
+      errorMsg.textContent = '';
+      gameSection.style.display = 'block';
+      newBtn.disabled = false;
+      showBtn.disabled = false;
+      createGrid();
+    });
+
+    function createGrid() {
+      appleGrid.innerHTML = '';
+      for (let i = 0; i < 10; i++) {
+        let apples = [];
+        const bitten = bittenPerRow[i];
+        const green = 5 - bitten;
+
+        for (let j = 0; j < bitten; j++) apples.push('bitten');
+        for (let j = 0; j < green; j++) apples.push('green');
+
+        apples.sort(() => Math.random() - 0.5);
+
+        apples.forEach(type => {
+          const cell = document.createElement('div');
+          cell.className = 'apple-cell ' + (type === 'bitten' ? 'bitten-apple' : 'green-apple');
+          cell.textContent = type === 'bitten' ? '✘' : '🍎';
+          appleGrid.appendChild(cell);
+        });
+      }
+    }
+
+    showBtn.addEventListener('click', () => {
+      const cells = document.querySelectorAll('.apple-cell');
+      cells.forEach(cell => {
+        if (cell.classList.contains('bitten-apple')) {
+          cell.textContent = '✘';
+        } else {
+          cell.textContent = '🍎';
+        }
+      });
+    });
+
+    newBtn.addEventListener('click', () => {
+      createGrid();
+    });
+  </script>
+
+</body>
+</html>
